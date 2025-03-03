@@ -2,12 +2,15 @@ from tkinter import StringVar
 
 import database_interface
 import tkinter as tk
+from tkinter import ttk
 import datetime
 
 
 
 class MainWindow:
     def __init__(self):
+        food_groups = ("Fats, Oils and Sweets", "Milk, Yogurt and Cheese", "Meats, Eggs, Dry Beans and  Nuts",
+                       "Vegetables", "Fruits", "Bread, Pasta, Cereal and Rice", "N/A")
         self.date = datetime.datetime.now().strftime("%d-%m-%Y")
         self.window = tk.Tk()
         date = StringVar()
@@ -15,7 +18,7 @@ class MainWindow:
         self.database = database_interface.Budget()
         self.window.config(padx=50,pady=50)
         self.main_canvas = tk.Canvas(self.window)
-        self.back = tk.Button(self.main_canvas, text="Back", command= self.main_page)
+        self.back = tk.Button(self.main_canvas, text="Back", command= self.main_page,padx=3,pady=3)
         self.element_list = []
         #Main Page
         self.greeting = tk.Label(self.main_canvas, text="Time to add some data!")
@@ -23,19 +26,22 @@ class MainWindow:
         self.button_add = tk.Button(self.main_canvas, text="Add", command=self.add_page, width=20)
         self.button_edit = tk.Button(self.main_canvas, text="Edit",command=self.edit, width=20)
         #Add Page
-        self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)")
-        self.date_entry = tk.Entry(self.main_canvas, textvariable=date)
-        self.product_name_label = tk.Label(self.main_canvas, text= "Product name")
-        self.product_name_entry = tk.Entry(self.main_canvas)
-        self.category_label = tk.Label(self.main_canvas, text="Type in the category.")
-        self.category_entry = tk.Entry(self.main_canvas, )
-        self.food_group_label = tk.Label(self.main_canvas, text="Please type food group.")
-        self.food_group_entry = tk.Entry(self.main_canvas, )
-        self.price_label = tk.Label(self.main_canvas, text="What is the price? (Per Item)")
-        self.price_entry = tk.Entry(self.main_canvas, )
-        self.quantity_label = tk.Label(self.main_canvas, text="How many did you buy?")
-        self.quantity_entry = tk.Entry(self.main_canvas, )
-        self.insert_button = tk.Button(self.main_canvas, text="Insert", command=self.insert)
+        self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)",padx=3,pady=3)
+        self.date_entry = tk.Entry(self.main_canvas, textvariable=date, width=35)
+        self.product_name_label = tk.Label(self.main_canvas, text= "Product name",padx=3,pady=3)
+        self.product_name_entry = tk.Entry(self.main_canvas, width=35)
+        self.category_label = tk.Label(self.main_canvas, text="Type in the category.",padx=3,pady=3)
+        self.category_entry = tk.Entry(self.main_canvas , width=35)
+        self.food_group_label = tk.Label(self.main_canvas, text="Please type food group.",padx=3,pady=3)
+        self.food_group_combo = ttk.Combobox(self.main_canvas, width=32)
+        self.food_group_combo["values"] = food_groups
+        self.price_label = tk.Label(self.main_canvas, text="What is the price? (Per Item)",padx=3,pady=3)
+        self.price_entry = tk.Entry(self.main_canvas,  width=35)
+        self.quantity_label = tk.Label(self.main_canvas, text="How many did you buy?",padx=3,pady=3)
+        self.quantity_entry = tk.Entry(self.main_canvas,  width=35)
+        self.insert_button = tk.Button(self.main_canvas, text="Insert", command=self.insert,padx=3,pady=3)
+
+
 
 
 
@@ -69,7 +75,7 @@ class MainWindow:
         self.category_label.grid(column=0, row=2, sticky="w")
         self.category_entry.grid(column=1, row=2)
         self.food_group_label.grid(column=0, row=3, sticky="w")
-        self.food_group_entry.grid(column=1, row=3)
+        self.food_group_combo.grid(column=1, row=3)
         self.price_label.grid(column=0, row=4, sticky="w")
         self.price_entry.grid(column=1, row=4)
         self.quantity_label.grid(column=0, row=5, sticky="w")
@@ -80,7 +86,7 @@ class MainWindow:
 
 
         self.element_list = [self.date_label, self.date_entry, self.category_label, self.category_entry,
-                             self.food_group_label, self.food_group_entry, self.price_label, self.price_entry,
+                             self.food_group_label, self.food_group_combo, self.price_label, self.price_entry,
                              self.quantity_label, self.quantity_entry, self.back, self.insert_button,
                              self.product_name_entry,self.product_name_label]
 
@@ -109,7 +115,7 @@ class MainWindow:
         day,month,year = date.split("-")
         name = self.product_name_entry.get()
         category = self.category_entry.get()
-        food_group = self.food_group_entry.get()
+        food_group = self.food_group_combo.current()
         price = self.price_entry.get()
         quantity = self.quantity_entry.get()
         data = {
