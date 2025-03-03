@@ -17,7 +17,7 @@ class MainWindow:
         date.set(self.date)
         self.database = database_interface.Budget()
         self.window.config(padx=50,pady=50)
-        self.main_canvas = tk.Canvas(self.window)
+        self.main_canvas = tk.Canvas(self.window, bd=0, highlightthickness=0)
         self.back = tk.Button(self.main_canvas, text="Back", command= self.main_page,padx=3,pady=3)
         self.element_list = []
         #Main Page
@@ -48,6 +48,14 @@ class MainWindow:
 
         #Edit Page
         #View Page
+        self.view_year_label = tk.Label(self.main_canvas,text= "Year")
+        self.view_month_label = tk.Label(self.main_canvas,text= "Month")
+        self.view_day_label = tk.Label(self.main_canvas,text= "Day")
+        self.view_name_label = tk.Label(self.main_canvas,text= "Name")
+        self.view_category_label = tk.Label(self.main_canvas,text= "Category")
+        self.view_food_group_label = tk.Label(self.main_canvas,text= "Food Group")
+        self.view_price_label = tk.Label(self.main_canvas,text= "Price")
+        self.view_quantity_label = tk.Label(self.main_canvas,text= "Quantity")
 
 
 
@@ -67,6 +75,17 @@ class MainWindow:
         column = 0
         row = 1
         data = self.database.load()
+        self.view_year_label.grid(column=0, row=0)
+        self.view_month_label.grid(column=1, row=0)
+        self.view_day_label.grid(column=2, row=0)
+        self.view_name_label.grid(column=3, row=0)
+        self.view_category_label.grid(column=4, row=0)
+        self.view_food_group_label.grid(column=5, row=0)
+        self.view_price_label.grid(column=6, row=0)
+        self.view_quantity_label.grid(column=7, row=0)
+        self.element_list = [self.view_year_label, self.view_month_label, self.view_day_label, self.view_name_label,
+                             self.view_category_label, self.view_food_group_label, self.view_price_label,
+                             self.view_quantity_label, self.back]
         for data_row in data:
             for data_column in data_row:
                 variable_entry = tk.Entry(self.main_canvas)
