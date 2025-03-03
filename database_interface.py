@@ -5,20 +5,14 @@ import pandas
 class Budget:
     def __init__(self):
         self.price = ""
-        self.mydb = mysql.connector.connect(
-            host="localhost",
-            user=private.USERNAME,
-            password=private.PASSWORD,
-            database = "budget"
 
-        )
-        print(self.mydb)
+
     def insert(self,data):
         for item in data:
             if data[item] == "":
                 raise ValueError #Please fill in all inputs
-
-        cursor = self.mydb.cursor()
+        database = self.connect_to()
+        cursor = database.cursor()
 
         year = data["Year"]
         month = data["Month"]
@@ -33,7 +27,9 @@ class Budget:
         cursor.execute(f'insert into receipts (Year, Month, Day, Name, Category, FoodGroup, Price, Quantity)'
                        f' values(%s,%s,%s,%s,%s,%s,%s,%s)',
                        (year,month,day,name,category,food_group,price,quantity))
-        self.mydb.commit()
+        database.commit()
+        cursor.close()
+        database.close()
 
     def format_price(self, item):
         price = item
@@ -42,6 +38,14 @@ class Budget:
         if "." not in list(price):
             price = price+".00"
         return price
+    def connect_to(self):
+        db = mysql.connector.connect(
+            host="localhost",
+            user=private.USERNAME,
+            password=private.PASSWORD,
+            database="budget"
+        )
+        return db
 
 
 
