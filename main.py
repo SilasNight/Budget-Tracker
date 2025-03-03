@@ -1,15 +1,18 @@
 from tkinter import StringVar
 
-import mysql.connector
+import database_interface
 import tkinter as tk
 import datetime
 
+
+
 class MainWindow:
     def __init__(self):
-        self.date = datetime.datetime.now().strftime("%Y-%m-%d")
+        self.date = datetime.datetime.now().strftime("%d-%m-%Y")
         self.window = tk.Tk()
         date = StringVar()
         date.set(self.date)
+        self.database = database_interface.Budget()
         self.window.config(padx=50,pady=50)
         self.main_canvas = tk.Canvas(self.window)
         self.back = tk.Button(self.main_canvas, text="Back", command= self.main_page)
@@ -22,6 +25,8 @@ class MainWindow:
         #Add Page
         self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)")
         self.date_entry = tk.Entry(self.main_canvas, textvariable=date)
+        self.product_name_label = tk.Label(self.main_canvas, text= "Product name")
+        self.product_name_entry = tk.Entry(self.main_canvas)
         self.category_label = tk.Label(self.main_canvas, text="Type in the category.")
         self.category_entry = tk.Entry(self.main_canvas, )
         self.food_group_label = tk.Label(self.main_canvas, text="Please type food group.")
@@ -30,6 +35,8 @@ class MainWindow:
         self.price_entry = tk.Entry(self.main_canvas, )
         self.quantity_label = tk.Label(self.main_canvas, text="How many did you buy?")
         self.quantity_entry = tk.Entry(self.main_canvas, )
+        self.insert_button = tk.Button(self.main_canvas, text="Insert", command=self.insert)
+
 
 
 
@@ -57,21 +64,25 @@ class MainWindow:
         self.window.title("Adding Data...")
         self.date_label.grid(column=0, row=0, sticky="w")
         self.date_entry.grid(column=1, row=0)
-        self.category_label.grid(column=0, row=1, sticky="w")
-        self.category_entry.grid(column=1, row=1)
-        self.food_group_label.grid(column=0, row=2, sticky="w")
-        self.food_group_entry.grid(column=1, row=2)
-        self.price_label.grid(column=0, row=3, sticky="w")
-        self.price_entry.grid(column=1, row=3)
-        self.quantity_label.grid(column=0, row=4, sticky="w")
-        self.quantity_entry.grid(column=1, row=4)
-        self.back.grid(column=0, row=5, sticky="w")
+        self.product_name_label.grid(column=0, row=1, sticky="w")
+        self.product_name_entry.grid(column=1, row=1)
+        self.category_label.grid(column=0, row=2, sticky="w")
+        self.category_entry.grid(column=1, row=2)
+        self.food_group_label.grid(column=0, row=3, sticky="w")
+        self.food_group_entry.grid(column=1, row=3)
+        self.price_label.grid(column=0, row=4, sticky="w")
+        self.price_entry.grid(column=1, row=4)
+        self.quantity_label.grid(column=0, row=5, sticky="w")
+        self.quantity_entry.grid(column=1, row=5)
+        self.back.grid(column=0, row=6, sticky="w"+"e")
+        self.insert_button.grid(column=1, row=6, sticky="w"+"e")
 
 
 
         self.element_list = [self.date_label, self.date_entry, self.category_label, self.category_entry,
                              self.food_group_label, self.food_group_entry, self.price_label, self.price_entry,
-                             self.quantity_label, self.quantity_entry, self.back]
+                             self.quantity_label, self.quantity_entry, self.back, self.insert_button,
+                             self.product_name_entry,self.product_name_label]
 
     def edit(self):
         pass
@@ -89,6 +100,32 @@ class MainWindow:
         for item in self.element_list:
             item.grid_remove()
         self.element_list = []
+
+    def check(self):
+        pass
+
+    def insert(self):
+        date = self.date_entry.get()
+        day,month,year = date.split("-")
+        name = self.product_name_entry.get()
+        category = self.category_entry.get()
+        food_group = self.food_group_entry.get()
+        price = self.price_entry.get()
+        quantity = self.quantity_entry.get()
+        data = {
+            "Year" : year,
+            "Month" : month,
+            "Day" : day,
+            "Name" : name,
+            "Category" : category,
+            "FoodGroup" : food_group,
+            "Price" : price,
+            "Quantity" : quantity
+        }
+
+        self.database.insert(data=data)
+
+
 
 
 
