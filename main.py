@@ -63,7 +63,23 @@ class MainWindow:
         self.window.mainloop()
 
     def view(self):
-        pass
+        self.clear()
+        column = 0
+        row = 1
+        data = self.database.load()
+        for data_row in data:
+            for data_column in data_row:
+                variable_entry = tk.Entry(self.main_canvas)
+                self.element_list.append(variable_entry)
+                variable_entry.grid(column=column, row=row, sticky="w"+"e")
+                variable_entry.insert(0, data_column)
+                if column ==7:
+                    column = 0
+                else:
+                    column+=1
+            row+=1
+        self.back.grid(column=column, row=row, sticky="w"+"e")
+
 
     def add_page(self):
         self.clear()

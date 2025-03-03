@@ -33,7 +33,7 @@ class Budget:
 
     def format_price(self, item):
         price = item
-        if price[0] == "R":
+        if price[0] != "R":
             price = "R"+item
         if "." not in list(price):
             price = price+".00"
@@ -46,6 +46,15 @@ class Budget:
             database="budget"
         )
         return db
+
+    def load(self):
+        db = self.connect_to()
+        cursor = db.cursor()
+        cursor.execute("select * from receipts")
+        df = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return df
 
 
 
