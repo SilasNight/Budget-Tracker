@@ -9,6 +9,7 @@ import datetime
 
 class MainWindow:
     def __init__(self):
+        self.months = "January, February, March, April, May, June, July, August, September, October, November, December".split(", ")
         food_groups = ("Fats, Oils and Sweets", "Milk, Yogurt and Cheese", "Meats, Eggs, Dry Beans and  Nuts",
                        "Vegetables", "Fruits", "Bread, Pasta, Cereal and Rice", "N/A")
         self.date = datetime.datetime.now().strftime("%d-%m-%Y")
@@ -33,7 +34,8 @@ class MainWindow:
         self.category_label = tk.Label(self.main_canvas, text="Type in the category.",padx=3,pady=3)
         self.category_entry = tk.Entry(self.main_canvas , width=35)
         self.food_group_label = tk.Label(self.main_canvas, text="Please type food group.",padx=3,pady=3)
-        self.food_group_combo = ttk.Combobox(self.main_canvas, width=32)
+        self.food_group_combo_text = StringVar()
+        self.food_group_combo = ttk.Combobox(self.main_canvas, width=32,textvariable=self.food_group_combo_text)
         self.food_group_combo["values"] = food_groups
         self.price_label = tk.Label(self.main_canvas, text="What is the price? (Per Item)",padx=3,pady=3)
         self.price_entry = tk.Entry(self.main_canvas,  width=35)
@@ -75,24 +77,26 @@ class MainWindow:
         column = 0
         row = 1
         data = self.database.load()
-        self.view_year_label.grid(column=0, row=0)
-        self.view_month_label.grid(column=1, row=0)
-        self.view_day_label.grid(column=2, row=0)
-        self.view_name_label.grid(column=3, row=0)
-        self.view_category_label.grid(column=4, row=0)
-        self.view_food_group_label.grid(column=5, row=0)
-        self.view_price_label.grid(column=6, row=0)
-        self.view_quantity_label.grid(column=7, row=0)
+        self.view_year_label.grid(column=1, row=0)
+        self.view_month_label.grid(column=2, row=0)
+        self.view_day_label.grid(column=3, row=0)
+        self.view_name_label.grid(column=4, row=0)
+        self.view_category_label.grid(column=5, row=0)
+        self.view_food_group_label.grid(column=6, row=0)
+        self.view_price_label.grid(column=7, row=0)
+        self.view_quantity_label.grid(column=8, row=0)
         self.element_list = [self.view_year_label, self.view_month_label, self.view_day_label, self.view_name_label,
                              self.view_category_label, self.view_food_group_label, self.view_price_label,
                              self.view_quantity_label, self.back]
         for data_row in data:
             for data_column in data_row:
-                variable_entry = tk.Entry(self.main_canvas)
+                if column == 2:
+                    data_column = self.months[int(data_column)-1]
+                variable_entry = tk.Label(self.main_canvas,text=data_column,borderwidth=1,relief="solid")
                 self.element_list.append(variable_entry)
                 variable_entry.grid(column=column, row=row, sticky="w"+"e")
-                variable_entry.insert(0, data_column)
-                if column ==7:
+
+                if column ==8:
                     column = 0
                 else:
                     column+=1
@@ -150,7 +154,7 @@ class MainWindow:
         day,month,year = date.split("-")
         name = self.product_name_entry.get()
         category = self.category_entry.get()
-        food_group = self.food_group_combo.current()
+        food_group = self.food_group_combo_text.get()
         price = self.price_entry.get()
         quantity = self.quantity_entry.get()
         data = {
