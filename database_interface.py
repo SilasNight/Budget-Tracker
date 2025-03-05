@@ -11,6 +11,8 @@ class Budget:
         for item in data:
             if data[item] == "":
                 raise ValueError #Please fill in all inputs
+        test = int(data["Price"])
+        test = int(data["Quantity"])
         database = self.connect_to()
         cursor = database.cursor()
 
@@ -54,11 +56,38 @@ class Budget:
         df = cursor.fetchall()
         cursor.close()
         db.close()
+
         return df
+
+    def check_id(self,test):
+        db = self.connect_to()
+        cursor = db.cursor()
+        cursor.execute("select * from receipts where id = %s", (test, ))
+        output = cursor.fetchall()
+        cursor.close()
+        db.close()
+
+        if len(output) != 0:
+            return True
+        else:
+            return False
+
+    def edit_info(self,target):
+        db = self.connect_to()
+        cursor = db.cursor()
+        cursor.execute("select * from receipts where id = %s", (target, ))
+        output = cursor.fetchall()[0]
+        cursor.close()
+        db.close()
+
+        return output
+
+
+
 
 
 
 
 if __name__ == "__main__":
 
-    Budget()
+    Budget().test()

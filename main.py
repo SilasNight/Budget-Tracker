@@ -19,13 +19,13 @@ class MainWindow:
         self.database = database_interface.Budget()
         self.window.config(padx=50,pady=50)
         self.main_canvas = tk.Canvas(self.window, bd=0, highlightthickness=0)
-        self.back = tk.Button(self.main_canvas, text="Back", command= self.main_page,padx=3,pady=3)
+        self.back = tk.Button(self.main_canvas, text="Main Page", command= self.main_page,padx=3,pady=3)
         self.element_list = []
         #Main Page
         self.greeting = tk.Label(self.main_canvas, text="Time to add some data!")
         self.button_view = tk.Button(self.main_canvas, text= "View", command=self.view, width=20)
         self.button_add = tk.Button(self.main_canvas, text="Add", command=self.add_page, width=20)
-        self.button_edit = tk.Button(self.main_canvas, text="Edit",command=self.edit, width=20)
+        self.button_edit = tk.Button(self.main_canvas, text="Edit",command=self.index_selection, width=20)
         #Add Page
         self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)",padx=3,pady=3)
         self.date_entry = tk.Entry(self.main_canvas, textvariable=date, width=35)
@@ -44,11 +44,31 @@ class MainWindow:
         self.insert_button = tk.Button(self.main_canvas, text="Insert", command=self.insert,padx=3,pady=3)
 
 
-
+        #Index selection
+        self.id_name_to_edit = tk.Label(self.main_canvas, text="Please choose which ID you would like to edit")
+        self.id_entry = tk.Entry(self.main_canvas, )
+        self.id_accept_button = tk.Button(self.main_canvas, text="Accept", command=self.accept_button)
+        self.id_view_button = tk.Button(self.main_canvas,text="View",command=self.view)
+        self.id_back_button = tk.Button(self.main_canvas,text="Main Page", command=self.main_page)
 
 
 
         #Edit Page
+        self.date_label_edit = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)", padx=3, pady=3)
+        self.date_entry_edit = tk.Entry(self.main_canvas, textvariable=date, width=35)
+        self.product_name_label_edit = tk.Label(self.main_canvas, text="Product name", padx=3, pady=3)
+        self.product_name_entry_edit = tk.Entry(self.main_canvas, width=35)
+        self.category_label_edit = tk.Label(self.main_canvas, text="Type in the category.", padx=3, pady=3)
+        self.category_entry_edit = tk.Entry(self.main_canvas, width=35)
+        self.food_group_label_edit = tk.Label(self.main_canvas, text="Please type food group.", padx=3, pady=3)
+        self.food_group_entry = tk.Entry(self.main_canvas, width=35)
+        self.price_label_edit = tk.Label(self.main_canvas, text="What is the price? (Per Item)", padx=3, pady=3)
+        self.price_entry_edit = tk.Entry(self.main_canvas, width=35)
+        self.quantity_label_edit = tk.Label(self.main_canvas, text="How many did you buy?", padx=3, pady=3)
+        self.quantity_entry_edit = tk.Entry(self.main_canvas, width=35)
+        self.insert_button_edit = tk.Button(self.main_canvas, text="Insert", command=self.insert, padx=3, pady=3)
+
+
         #View Page
         self.view_year_label = tk.Label(self.main_canvas,text= "Year")
         self.view_month_label = tk.Label(self.main_canvas,text= "Month")
@@ -68,12 +88,13 @@ class MainWindow:
 
 
 
-        print("me")
+
         self.main_page()
         self.window.mainloop()
 
     def view(self):
         self.clear()
+        self.window.title("Viewing Data...")
         column = 0
         row = 1
         data = self.database.load()
@@ -103,6 +124,15 @@ class MainWindow:
             row+=1
         self.back.grid(column=column, row=row, sticky="w"+"e")
 
+    def index_selection(self):
+        self.clear()
+        self.window.title("Select The ID of a entry to edit")
+        self.id_name_to_edit.grid(column=0,row=0,columnspan=3)
+        self.id_entry.grid(column=0,row=1,columnspan=3, sticky="w" + "e")
+        self.id_accept_button.grid(column=1,row=2, sticky="w" + "e")
+        self.id_back_button.grid(column=0,row=2, sticky="w" + "e")
+        self.id_view_button.grid(column=2, row=2, sticky="w" + "e")
+        self.element_list = [self.id_name_to_edit, self.id_entry,self.id_accept_button,self.id_back_button,self.id_view_button]
 
     def add_page(self):
         self.clear()
@@ -130,7 +160,66 @@ class MainWindow:
                              self.product_name_entry,self.product_name_label]
 
     def edit(self):
-        pass
+        self.clear()
+        self.window.title("Edit Entry")
+        self.date_label_edit.grid(column=0,row=0)
+        self.date_entry_edit.grid(column=1,row=0)
+        self.product_name_label_edit.grid(column=0,row=1)
+        self.product_name_entry_edit.grid(column=1,row=1)
+        self.category_label_edit.grid(column=0,row=2)
+        self.category_entry_edit.grid(column=1,row=2)
+        self.food_group_label_edit.grid(column=0,row=3)
+        self.food_group_entry.grid(column=1,row=3)
+        self.price_label_edit.grid(column=0,row=4)
+        self.price_entry_edit.grid(column=1,row=4)
+        self.quantity_label_edit.grid(column=0,row=5)
+        self.quantity_entry_edit.grid(column=1,row=5)
+        self.back.grid(column=0, row=6)
+        self.insert_button_edit.grid(column=1,row=6)
+        self.get_edit_info(self.id_entry.get())
+        self.element_list = [self.date_entry_edit, self.date_label_edit, self.product_name_label_edit,
+                             self.product_name_entry_edit, self.category_label_edit, self.category_entry_edit,
+                             self.food_group_label_edit, self.food_group_entry, self.price_label_edit,
+                             self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
+                             self.insert_button_edit, self.back]
+
+    def accept_button(self):
+        target_id = self.id_entry.get()
+        if self.database.check_id(test=target_id):
+            self.edit()
+        else:
+            self.window.title("Invalid ID!")
+
+    def get_edit_info(self, test):
+        data = self.database.edit_info(test)
+        self.date_entry_edit.delete(0,tk.END)
+        self.product_name_entry_edit.delete(0,tk.END)
+        self.category_entry_edit.delete(0,tk.END)
+        self.food_group_entry.delete(0,tk.END)
+        self.price_entry_edit.delete(0,tk.END)
+        self.quantity_entry_edit.delete(0,tk.END)
+
+        year = data[1]
+        month = data[2]
+        day = data[3]
+        name = data[4]
+        category = data[5]
+        food_group = data[6]
+        price = data[7]
+        quantity = data[8]
+        date = f"{day}-{month}-{year}"
+
+        self.date_entry_edit.insert(0, date)
+        self.product_name_entry_edit.insert(0, name)
+        self.category_entry_edit.insert(0, category)
+        self.food_group_entry.insert(0, food_group)
+        self.price_entry_edit.insert(0, price)
+        self.quantity_entry_edit.insert(0, quantity)
+
+
+
+
+
 
     def main_page(self):
         self.clear()
@@ -146,14 +235,12 @@ class MainWindow:
             item.grid_remove()
         self.element_list = []
 
-    def check(self):
-        pass
 
     def insert(self):
         date = self.date_entry.get()
         day,month,year = date.split("-")
-        name = self.product_name_entry.get()
-        category = self.category_entry.get()
+        name = self.product_name_entry.get().title()
+        category = self.category_entry.get().title()
         food_group = self.food_group_combo_text.get()
         price = self.price_entry.get()
         quantity = self.quantity_entry.get()
@@ -169,6 +256,11 @@ class MainWindow:
         }
 
         self.database.insert(data=data)
+
+        self.product_name_entry.delete(0,tk.END)
+        self.category_entry.delete(0,tk.END)
+        self.price_entry.delete(0,tk.END)
+        self.quantity_entry.delete(0,tk.END)
 
 
 
