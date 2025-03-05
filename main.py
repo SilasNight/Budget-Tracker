@@ -70,6 +70,7 @@ class MainWindow:
         self.quantity_label_edit = tk.Label(self.main_canvas, text="How many did you buy?", padx=3, pady=3)
         self.quantity_entry_edit = tk.Entry(self.main_canvas, width=35)
         self.insert_button_edit = tk.Button(self.main_canvas, text="Insert", command=self.update, padx=3, pady=3)
+        self.delete_button = tk.Button(self.main_canvas,text="DELETE", command=self.delete)
 
 
         #View Page
@@ -86,6 +87,10 @@ class MainWindow:
 
         self.main_page()
         self.window.mainloop()
+
+    def delete(self):
+        target = self.id_target
+        self.database.delete_entry(target)
 
     def view(self):
         self.clear()
@@ -158,26 +163,28 @@ class MainWindow:
     def edit(self):
         self.clear()
         self.window.title("Edit Entry")
-        self.date_label_edit.grid(column=0,row=0)
+        self.date_label_edit.grid(column=0,row=0,sticky="w")
         self.date_entry_edit.grid(column=1,row=0)
-        self.product_name_label_edit.grid(column=0,row=1)
+        self.product_name_label_edit.grid(column=0,row=1,sticky="w")
         self.product_name_entry_edit.grid(column=1,row=1)
-        self.category_label_edit.grid(column=0,row=2)
+        self.category_label_edit.grid(column=0,row=2,sticky="w")
         self.category_entry_edit.grid(column=1,row=2)
-        self.food_group_label_edit.grid(column=0,row=3)
+        self.food_group_label_edit.grid(column=0,row=3,sticky="w")
         self.food_group_entry.grid(column=1,row=3)
-        self.price_label_edit.grid(column=0,row=4)
+        self.price_label_edit.grid(column=0,row=4,sticky="w")
         self.price_entry_edit.grid(column=1,row=4)
-        self.quantity_label_edit.grid(column=0,row=5)
+        self.quantity_label_edit.grid(column=0,row=5,sticky="w")
         self.quantity_entry_edit.grid(column=1,row=5)
-        self.back.grid(column=0, row=6)
-        self.insert_button_edit.grid(column=1,row=6)
+        self.back.grid(column=0, row=6,sticky="w"+"e")
+        self.insert_button_edit.grid(column=1,row=6,sticky="w"+"e")
+        self.delete_button.grid(column=1,row=7,sticky="w"+"e")
         self.get_edit_info(self.id_entry.get())
+
         self.element_list = [self.date_entry_edit, self.date_label_edit, self.product_name_label_edit,
                              self.product_name_entry_edit, self.category_label_edit, self.category_entry_edit,
                              self.food_group_label_edit, self.food_group_entry, self.price_label_edit,
                              self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
-                             self.insert_button_edit, self.back]
+                             self.insert_button_edit, self.back, self.delete_button]
 
     def update(self):
         date = self.date_entry_edit.get()

@@ -82,6 +82,15 @@ class Budget:
 
         return output
 
+    def delete_entry(self,target):
+        db = self.connect_to()
+        cursor = db.cursor()
+        command = f"DELETE FROM receipts WHERE ID = {target}"
+        cursor.execute(command)
+        db.commit()
+        cursor.close()
+        db.close()
+
     def edit_entry(self,data):
         target_id = data[0]
         values = data[1]
@@ -100,8 +109,10 @@ class Budget:
         command = (f"UPDATE receipts SET Year = {year}, Month = {month}, Day = {day}, Name = {name}, "
                    f"Category = {category}, FoodGroup = {food_group}, Price = {price}, Quantity = {quantity} "
                    f"WHERE ID = {target_id}")
+
         cursor.execute(command)
         cursor.close()
+        db.commit()
         db.close()
 
 
