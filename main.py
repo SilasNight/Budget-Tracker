@@ -1,5 +1,4 @@
 from tkinter import StringVar
-
 import database_interface
 import tkinter as tk
 from tkinter import ttk
@@ -12,6 +11,7 @@ class MainWindow:
         self.months = "January, February, March, April, May, June, July, August, September, October, November, December".split(", ")
         food_groups = ("Fats, Oils and Sweets", "Milk, Yogurt and Cheese", "Meats, Eggs, Dry Beans and  Nuts",
                        "Vegetables", "Fruits", "Bread, Pasta, Cereal and Rice", "N/A")
+
         self.date = datetime.datetime.now().strftime("%d-%m-%Y")
         self.window = tk.Tk()
         date = StringVar()
@@ -21,11 +21,13 @@ class MainWindow:
         self.main_canvas = tk.Canvas(self.window, bd=0, highlightthickness=0)
         self.back = tk.Button(self.main_canvas, text="Main Page", command= self.main_page,padx=3,pady=3)
         self.element_list = []
+
         #Main Page
         self.greeting = tk.Label(self.main_canvas, text="Time to add some data!")
         self.button_view = tk.Button(self.main_canvas, text= "View", command=self.view, width=20)
         self.button_add = tk.Button(self.main_canvas, text="Add", command=self.add_page, width=20)
         self.button_edit = tk.Button(self.main_canvas, text="Edit",command=self.index_selection, width=20)
+
         #Add Page
         self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)",padx=3,pady=3)
         self.date_entry = tk.Entry(self.main_canvas, textvariable=date, width=35)
@@ -45,6 +47,7 @@ class MainWindow:
 
 
         #Index selection
+        self.id_target = ""
         self.id_name_to_edit = tk.Label(self.main_canvas, text="Please choose which ID you would like to edit")
         self.id_entry = tk.Entry(self.main_canvas, )
         self.id_accept_button = tk.Button(self.main_canvas, text="Accept", command=self.accept_button)
@@ -66,7 +69,7 @@ class MainWindow:
         self.price_entry_edit = tk.Entry(self.main_canvas, width=35)
         self.quantity_label_edit = tk.Label(self.main_canvas, text="How many did you buy?", padx=3, pady=3)
         self.quantity_entry_edit = tk.Entry(self.main_canvas, width=35)
-        self.insert_button_edit = tk.Button(self.main_canvas, text="Insert", command=self.insert, padx=3, pady=3)
+        self.insert_button_edit = tk.Button(self.main_canvas, text="Insert", command=self.update, padx=3, pady=3)
 
 
         #View Page
@@ -79,15 +82,7 @@ class MainWindow:
         self.view_price_label = tk.Label(self.main_canvas,text= "Price")
         self.view_quantity_label = tk.Label(self.main_canvas,text= "Quantity")
 
-
-
-
-
-
         self.main_canvas.pack()
-
-
-
 
         self.main_page()
         self.window.mainloop()
@@ -132,7 +127,8 @@ class MainWindow:
         self.id_accept_button.grid(column=1,row=2, sticky="w" + "e")
         self.id_back_button.grid(column=0,row=2, sticky="w" + "e")
         self.id_view_button.grid(column=2, row=2, sticky="w" + "e")
-        self.element_list = [self.id_name_to_edit, self.id_entry,self.id_accept_button,self.id_back_button,self.id_view_button]
+        self.element_list = [self.id_name_to_edit, self.id_entry,self.id_accept_button,self.id_back_button,
+                             self.id_view_button]
 
     def add_page(self):
         self.clear()
@@ -183,10 +179,25 @@ class MainWindow:
                              self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
                              self.insert_button_edit, self.back]
 
+    def update(self):
+        date = self.date_entry_edit.get()
+        name = self.product_name_entry_edit.get()
+        category = self.category_entry_edit.get()
+        food_group = self.food_group_entry.get()
+        price = self.price_entry_edit.get()
+        quantity = self.quantity_entry_edit.get()
+
+        day,month,year = date.split("-")
+        output = [year, month, day, name, category, food_group, price, quantity]
+        data = [self.id_target, output]
+        self.database.edit_entry(data)
+
+
     def accept_button(self):
         target_id = self.id_entry.get()
         if self.database.check_id(test=target_id):
             self.edit()
+            self.id_target = target_id
         else:
             self.window.title("Invalid ID!")
 
