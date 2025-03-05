@@ -82,6 +82,7 @@ class MainWindow:
         self.view_food_group_label = tk.Label(self.main_canvas,text= "Food Group")
         self.view_price_label = tk.Label(self.main_canvas,text= "Price")
         self.view_quantity_label = tk.Label(self.main_canvas,text= "Quantity")
+        self.edit_view = tk.Button(self.main_canvas, text="Edit", command=self.index_selection)
 
         self.main_canvas.pack()
 
@@ -108,7 +109,7 @@ class MainWindow:
         self.view_quantity_label.grid(column=8, row=0)
         self.element_list = [self.view_year_label, self.view_month_label, self.view_day_label, self.view_name_label,
                              self.view_category_label, self.view_food_group_label, self.view_price_label,
-                             self.view_quantity_label, self.back]
+                             self.view_quantity_label, self.back, self.edit_view]
         for data_row in data:
             for data_column in data_row:
                 if column == 2:
@@ -123,6 +124,7 @@ class MainWindow:
                     column+=1
             row+=1
         self.back.grid(column=column, row=row, sticky="w"+"e")
+        self.edit_view.grid(column=column+1, row=row, sticky="w"+"e"+"s"+"n")
 
     def index_selection(self):
         self.clear()
