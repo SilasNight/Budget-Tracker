@@ -70,6 +70,7 @@ class MainWindow:
 
 
         #View Page
+        self.id_label = tk.Label(self.main_canvas, text="ID")
         self.view_year_label = tk.Label(self.main_canvas,text= "Year")
         self.view_month_label = tk.Label(self.main_canvas,text= "Month")
         self.view_day_label = tk.Label(self.main_canvas,text= "Day")
@@ -78,6 +79,7 @@ class MainWindow:
         self.view_food_group_label = tk.Label(self.main_canvas,text= "Food Group")
         self.view_price_label = tk.Label(self.main_canvas,text= "Price")
         self.view_quantity_label = tk.Label(self.main_canvas,text= "Quantity")
+        self.spacer_label = tk.Label(self.main_canvas, text=" ")
 
         self.main_canvas.pack()
 
@@ -94,6 +96,7 @@ class MainWindow:
         column = 0
         row = 1
         data = self.database.load()
+        self.id_label.grid(column=2, row=0)
         self.view_year_label.grid(column=3, row=0)
         self.view_month_label.grid(column=4, row=0)
         self.view_day_label.grid(column=5, row=0)
@@ -104,7 +107,7 @@ class MainWindow:
         self.view_quantity_label.grid(column=10, row=0)
         self.element_list = [self.view_year_label, self.view_month_label, self.view_day_label, self.view_name_label,
                              self.view_category_label, self.view_food_group_label, self.view_price_label,
-                             self.view_quantity_label, self.back]
+                             self.view_quantity_label, self.back, self.id_label]
         for data_row in data:
             for data_column in data_row:
                 if column == 0:
@@ -130,7 +133,8 @@ class MainWindow:
                 else:
                     column+=1
             row+=1
-        self.back.grid(column=column+2, row=row, sticky="w"+"e")
+        self.spacer_label.grid(column=column, row=row)
+        self.back.grid(column=column, row=row+1, sticky="w"+"e")
 
 
     def dynamic_edit_action(self,id_target):
@@ -168,6 +172,9 @@ class MainWindow:
                              self.quantity_label, self.quantity_entry, self.back, self.insert_button,
                              self.product_name_entry,self.product_name_label]
 
+        self.date_entry.delete(0, tk.END)
+        self.date_entry.insert(0, self.date)
+
     def edit(self):
         self.clear()
         self.window.title("Edit Entry")
@@ -192,9 +199,8 @@ class MainWindow:
                              self.product_name_entry_edit, self.category_label_edit, self.category_entry_edit,
                              self.food_group_label_edit, self.food_group_entry, self.price_label_edit,
                              self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
-                             self.insert_button_edit, self.back]
-        self.date_entry.delete(0,tk.END)
-        self.date_entry.insert(0,self.date)
+                             self.insert_button_edit, self.back, self.button_view]
+
 
     def update(self):
         date = self.date_entry_edit.get()
