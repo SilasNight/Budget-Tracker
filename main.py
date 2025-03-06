@@ -14,8 +14,6 @@ class MainWindow:
 
         self.date = datetime.datetime.now().strftime("%d-%m-%Y")
         self.window = tk.Tk()
-        date = StringVar()
-        date.set(self.date)
         self.database = database_interface.Budget()
         self.window.config(padx=50,pady=50)
         self.main_canvas = tk.Canvas(self.window, bd=0, highlightthickness=0)
@@ -29,7 +27,7 @@ class MainWindow:
 
         #Add Page
         self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)",padx=3,pady=3)
-        self.date_entry = tk.Entry(self.main_canvas, textvariable=date, width=35)
+        self.date_entry = tk.Entry(self.main_canvas, width=35)
         self.product_name_label = tk.Label(self.main_canvas, text= "Product name",padx=3,pady=3)
         self.product_name_entry = tk.Entry(self.main_canvas, width=35)
         self.category_label = tk.Label(self.main_canvas, text="Type in the category.",padx=3,pady=3)
@@ -195,6 +193,8 @@ class MainWindow:
                              self.food_group_label_edit, self.food_group_entry, self.price_label_edit,
                              self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
                              self.insert_button_edit, self.back]
+        self.date_entry.delete(0,tk.END)
+        self.date_entry.insert(0,self.date)
 
     def update(self):
         date = self.date_entry_edit.get()
