@@ -55,7 +55,7 @@ class MainWindow:
 
         #Edit Page
         self.date_label_edit = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)", padx=3, pady=3)
-        self.date_entry_edit = tk.Entry(self.main_canvas, textvariable=date, width=35)
+        self.date_entry_edit = tk.Entry(self.main_canvas, width=35)
         self.product_name_label_edit = tk.Label(self.main_canvas, text="Product name", padx=3, pady=3)
         self.product_name_entry_edit = tk.Entry(self.main_canvas, width=35)
         self.category_label_edit = tk.Label(self.main_canvas, text="Type in the category.", padx=3, pady=3)
