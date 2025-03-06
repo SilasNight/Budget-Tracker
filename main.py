@@ -26,7 +26,6 @@ class MainWindow:
         self.greeting = tk.Label(self.main_canvas, text="Time to add some data!")
         self.button_view = tk.Button(self.main_canvas, text= "View", command=self.view, width=20)
         self.button_add = tk.Button(self.main_canvas, text="Add", command=self.add_page, width=20)
-        self.button_edit = tk.Button(self.main_canvas, text="Edit",command=self.index_selection, width=20)
 
         #Add Page
         self.date_label = tk.Label(self.main_canvas, text="Date (DD-MM-YYYY)",padx=3,pady=3)
@@ -69,8 +68,7 @@ class MainWindow:
         self.price_entry_edit = tk.Entry(self.main_canvas, width=35)
         self.quantity_label_edit = tk.Label(self.main_canvas, text="How many did you buy?", padx=3, pady=3)
         self.quantity_entry_edit = tk.Entry(self.main_canvas, width=35)
-        self.insert_button_edit = tk.Button(self.main_canvas, text="Insert", command=self.update, padx=3, pady=3)
-        self.delete_button = tk.Button(self.main_canvas,text="DELETE", command=self.delete)
+        self.insert_button_edit = tk.Button(self.main_canvas, text="Update", command=self.update, padx=3, pady=3)
 
 
         #View Page
@@ -82,7 +80,6 @@ class MainWindow:
         self.view_food_group_label = tk.Label(self.main_canvas,text= "Food Group")
         self.view_price_label = tk.Label(self.main_canvas,text= "Price")
         self.view_quantity_label = tk.Label(self.main_canvas,text= "Quantity")
-        self.edit_view = tk.Button(self.main_canvas, text="Edit", command=self.index_selection)
 
         self.main_canvas.pack()
 
@@ -99,43 +96,54 @@ class MainWindow:
         column = 0
         row = 1
         data = self.database.load()
-        self.view_year_label.grid(column=1, row=0)
-        self.view_month_label.grid(column=2, row=0)
-        self.view_day_label.grid(column=3, row=0)
-        self.view_name_label.grid(column=4, row=0)
-        self.view_category_label.grid(column=5, row=0)
-        self.view_food_group_label.grid(column=6, row=0)
-        self.view_price_label.grid(column=7, row=0)
-        self.view_quantity_label.grid(column=8, row=0)
+        self.view_year_label.grid(column=3, row=0)
+        self.view_month_label.grid(column=4, row=0)
+        self.view_day_label.grid(column=5, row=0)
+        self.view_name_label.grid(column=6, row=0)
+        self.view_category_label.grid(column=7, row=0)
+        self.view_food_group_label.grid(column=8, row=0)
+        self.view_price_label.grid(column=9, row=0)
+        self.view_quantity_label.grid(column=10, row=0)
         self.element_list = [self.view_year_label, self.view_month_label, self.view_day_label, self.view_name_label,
                              self.view_category_label, self.view_food_group_label, self.view_price_label,
-                             self.view_quantity_label, self.back, self.edit_view]
+                             self.view_quantity_label, self.back]
         for data_row in data:
             for data_column in data_row:
-                if column == 2:
+                if column == 0:
+                    number = data_column
+                    dynamic_delete = self.make_delete_button(number)
+                    self.element_list.append(dynamic_delete)
+                    dynamic_delete.grid(column=column, row=row, sticky="w"+"e")
+                    column +=1
+
+                    dynamic_edit = self.make_edit_button(number)
+                    self.element_list.append(dynamic_edit)
+                    dynamic_edit.grid(column=column, row=row, sticky="w"+"e")
+                    column += 1
+
+                if column == 4:
                     data_column = self.months[int(data_column)-1]
                 variable_entry = tk.Label(self.main_canvas,text=data_column,borderwidth=1,relief="solid")
                 self.element_list.append(variable_entry)
-                variable_entry.grid(column=column, row=row, sticky="w"+"e")
+                variable_entry.grid(column=column, row=row, sticky="w"+"e"+"s"+"n")
 
-                if column ==8:
+                if column ==10:
                     column = 0
                 else:
                     column+=1
             row+=1
-        self.back.grid(column=column, row=row, sticky="w"+"e")
-        self.edit_view.grid(column=column+1, row=row, sticky="w"+"e"+"s"+"n")
+        self.back.grid(column=column+2, row=row, sticky="w"+"e")
 
-    def index_selection(self):
-        self.clear()
-        self.window.title("Select The ID of a entry to edit")
-        self.id_name_to_edit.grid(column=0,row=0,columnspan=3)
-        self.id_entry.grid(column=0,row=1,columnspan=3, sticky="w" + "e")
-        self.id_accept_button.grid(column=1,row=2, sticky="w" + "e")
-        self.id_back_button.grid(column=0,row=2, sticky="w" + "e")
-        self.id_view_button.grid(column=2, row=2, sticky="w" + "e")
-        self.element_list = [self.id_name_to_edit, self.id_entry,self.id_accept_button,self.id_back_button,
-                             self.id_view_button]
+
+    def dynamic_edit_action(self,id_target):
+        self.id_target = id_target
+        self.edit()
+
+    def dynamic_delete_action(self,id_target):
+        self.id_target = id_target
+        self.delete()
+        self.view()
+
 
     def add_page(self):
         self.clear()
@@ -179,14 +187,14 @@ class MainWindow:
         self.quantity_entry_edit.grid(column=1,row=5)
         self.back.grid(column=0, row=6,sticky="w"+"e")
         self.insert_button_edit.grid(column=1,row=6,sticky="w"+"e")
-        self.delete_button.grid(column=1,row=7,sticky="w"+"e")
-        self.get_edit_info(self.id_entry.get())
+        self.button_view.grid(column=0,row=7,columnspan=2)
+        self.get_edit_info(self.id_target)
 
         self.element_list = [self.date_entry_edit, self.date_label_edit, self.product_name_label_edit,
                              self.product_name_entry_edit, self.category_label_edit, self.category_entry_edit,
                              self.food_group_label_edit, self.food_group_entry, self.price_label_edit,
                              self.price_entry_edit, self.quantity_label_edit, self.quantity_entry_edit,
-                             self.insert_button_edit, self.back, self.delete_button]
+                             self.insert_button_edit, self.back]
 
     def update(self):
         date = self.date_entry_edit.get()
@@ -244,11 +252,10 @@ class MainWindow:
     def main_page(self):
         self.clear()
         self.window.title("Budget Tracker")
-        self.greeting.grid(column=0, row=0, columnspan=3, sticky="w" + "e")
+        self.greeting.grid(column=0, row=0, columnspan=2, sticky="w" + "e")
         self.button_add.grid(column=0, row=1, sticky="w" + "e")
-        self.button_edit.grid(column=1, row=1, sticky="w" + "e")
-        self.button_view.grid(column=2, row=1, sticky="w" + "e")
-        self.element_list = [self.greeting,self.button_add,self.button_edit,self.button_view]
+        self.button_view.grid(column=1, row=1, sticky="w" + "e")
+        self.element_list = [self.greeting,self.button_add,self.button_view]
 
     def clear(self):
         for item in self.element_list:
@@ -282,8 +289,15 @@ class MainWindow:
         self.price_entry.delete(0,tk.END)
         self.quantity_entry.delete(0,tk.END)
 
+    def make_edit_button(self,number):
+        dynamic_edit = tk.Button(self.main_canvas, text="Edit",
+                                 command=lambda: self.dynamic_edit_action(number))
+        return dynamic_edit
 
-
+    def make_delete_button(self,number):
+        dynamic_edit = tk.Button(self.main_canvas, text="Delete",
+                                 command=lambda: self.dynamic_delete_action(number))
+        return dynamic_edit
 
 
 
